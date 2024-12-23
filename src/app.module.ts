@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
@@ -14,9 +17,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.MONGO_INITDB_DATABASE || 'locadora-db',
       authSource: 'admin',
       useUnifiedTopology: true,
-      entities: [],
+      entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: true,
     }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
