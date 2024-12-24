@@ -13,6 +13,7 @@ import { CreateUserDto } from './dtos/User/CreateUserDto';
 import { ListUserDto } from './dtos/User/ListUserDto';
 import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from './dtos/User/UpdateUserDto';
+import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
 
 @Controller('user')
 export class UserController {
@@ -47,5 +48,12 @@ export class UserController {
   ) {
     const objectId = new ObjectId(id);
     return this.userService.update(objectId, updateUserDto);
+  }
+
+  // ToDo: Implement authorization where only allows ADMINs to acess
+  @Patch(':id')
+  async updateRole(@Param('id') id: string, @Body() role: UpdateUserRoleDto) {
+    const objectId = new ObjectId(id);
+    return this.userService.updateRole(objectId, role);
   }
 }

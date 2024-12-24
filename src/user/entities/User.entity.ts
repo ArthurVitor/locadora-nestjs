@@ -1,6 +1,7 @@
 import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 import { Address } from './Address.entity';
 import { AutoMap } from '@automapper/classes';
+import { RolesEnum } from '../enums/RolesEnum';
 
 @Entity('users')
 export class User {
@@ -31,6 +32,13 @@ export class User {
   @Column()
   @AutoMap()
   cellPhone: string;
+
+  @Column({
+    enum: RolesEnum,
+    default: RolesEnum.USER,
+  })
+  @AutoMap()
+  role: RolesEnum = RolesEnum.USER;
 
   @Column()
   @AutoMap(() => Address)
