@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
@@ -20,6 +24,12 @@ export class UserService {
   ) {}
 
   async create(user: CreateUserDto): Promise<ListUserDto> {
+    if (await this.findOne(user.email)) {
+      throw new ConflictException(
+        `User with email ${user.email} already exists`,
+      );
+    }
+
     user.password = await bcrypt.hash(user.password, 10);
     const createdUser = await this.userRepository.save(
       this.mapper.map(user, CreateUserDto, User),
@@ -72,5 +82,15 @@ export class UserService {
     this.userRepository.save(user);
 
     return this.mapper.map(user, User, ListUserDto);
+  }
+
+  async findOne(email: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ email: email });
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return user;
   }
 }

@@ -5,9 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mongodb',
       host: process.env.MONGO_HOST || 'localhost',
@@ -24,6 +27,7 @@ import { classes } from '@automapper/classes';
       strategyInitializer: classes(),
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
