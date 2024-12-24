@@ -7,7 +7,7 @@ import { Public } from './infra/security/decorator/isPublic.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('login')
   @Public()
   async login(@Body() body: LoginDto) {
     return await this.authService.login(body);

@@ -24,7 +24,7 @@ export class UserService {
   ) {}
 
   async create(user: CreateUserDto): Promise<ListUserDto> {
-    if (await this.findOne(user.email)) {
+    if (await this.userRepository.findOneBy({ email: user.email })) {
       throw new ConflictException(
         `User with email ${user.email} already exists`,
       );

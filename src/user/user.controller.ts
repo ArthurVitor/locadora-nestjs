@@ -14,12 +14,16 @@ import { ListUserDto } from './dtos/User/ListUserDto';
 import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from './dtos/User/UpdateUserDto';
 import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
+import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
+import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
+import { RolesEnum } from './enums/RolesEnum';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Public()
   async create(@Body() body: CreateUserDto): Promise<ListUserDto> {
     return await this.userService.create(body);
   }
@@ -52,6 +56,7 @@ export class UserController {
 
   // ToDo: Implement authorization where only allows ADMINs to acess
   @Patch(':id')
+  @Roles(RolesEnum.ADMIN)
   async updateRole(@Param('id') id: string, @Body() role: UpdateUserRoleDto) {
     const objectId = new ObjectId(id);
     return this.userService.updateRole(objectId, role);
