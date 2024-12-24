@@ -13,7 +13,7 @@ export class User {
   @AutoMap()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   @AutoMap()
   email: string;
 
