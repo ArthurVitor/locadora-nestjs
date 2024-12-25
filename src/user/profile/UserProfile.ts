@@ -26,7 +26,7 @@ export class UserProfile extends AutomapperProfile {
         ),
         forMember(
           (dest) => dest.role,
-          mapFrom((src) => src.role), // Mapeia diretamente o campo role
+          mapFrom((src) => src.role),
         ),
       );
       createMap(mapper, UpdateUserDto, User);
