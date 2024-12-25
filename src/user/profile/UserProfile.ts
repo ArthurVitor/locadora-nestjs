@@ -24,6 +24,10 @@ export class UserProfile extends AutomapperProfile {
           (dest) => dest.id,
           mapFrom((src) => src.id.toString()),
         ),
+        forMember(
+          (dest) => dest.role,
+          mapFrom((src) => src.role),
+        ),
       );
       createMap(mapper, UpdateUserDto, User);
       createMap(mapper, ListUserDto, User);

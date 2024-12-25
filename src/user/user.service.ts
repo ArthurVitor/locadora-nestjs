@@ -24,7 +24,7 @@ export class UserService {
   ) {}
 
   async create(user: CreateUserDto): Promise<ListUserDto> {
-    if (await this.findOne(user.email)) {
+    if (await this.userRepository.findOneBy({ email: user.email })) {
       throw new ConflictException(
         `User with email ${user.email} already exists`,
       );
@@ -71,14 +71,18 @@ export class UserService {
     return this.mapper.map(user, User, ListUserDto);
   }
 
-  async updateRole(id: ObjectId, role: UpdateUserRoleDto) {
+  async addRole(id: ObjectId, role: UpdateUserRoleDto) {
     const user = await this.userRepository.findOneBy(id);
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    user.role = RolesEnum[role.name];
+    if (user.role.includes(RolesEnum[role.name])) {
+      return this.mapper.map(user, User, ListUserDto);
+    }
+
+    user.role.push(RolesEnum[role.name]);
     this.userRepository.save(user);
 
     return this.mapper.map(user, User, ListUserDto);

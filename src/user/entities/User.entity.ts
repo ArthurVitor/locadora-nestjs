@@ -34,11 +34,12 @@ export class User {
   cellPhone: string;
 
   @Column({
+    type: 'array',
     enum: RolesEnum,
-    default: RolesEnum.USER,
+    default: [RolesEnum.USER],
   })
   @AutoMap()
-  role: RolesEnum = RolesEnum.USER;
+  role: RolesEnum[] = [RolesEnum.USER];
 
   @Column()
   @AutoMap(() => Address)
