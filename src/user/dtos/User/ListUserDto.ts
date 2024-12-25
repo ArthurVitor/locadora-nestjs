@@ -34,7 +34,7 @@ export class ListUserDto {
 
   @ApiProperty()
   @AutoMap()
-  role: RolesEnum;
+  role: RolesEnum[] = [];
 
   @ApiProperty()
   @AutoMap(() => AddressDto)
