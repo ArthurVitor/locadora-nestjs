@@ -11,6 +11,7 @@ import { Mapper } from '@automapper/core';
 import { CreateCarDto } from './dtos/CreateCarDto';
 import { ListCarDto } from './dtos/ListCarDto';
 import { ObjectId } from 'mongodb';
+import { UpdateCarDto } from './dtos/UpdateCarDto';
 
 @Injectable()
 export class CarService {
@@ -48,5 +49,20 @@ export class CarService {
     }
 
     return this.mapper.map(car, Car, ListCarDto);
+  }
+
+  async patch(id: ObjectId, dto: UpdateCarDto) {
+    const car = await this.carRepository.findOneBy(id);
+
+    if (!car) {
+      throw new NotFoundException(
+        'Could not find car with id: ' + id.toString(),
+      );
+    }
+
+    Object.assign(car, dto);
+    const updatedCar = await this.carRepository.save(car);
+
+    return this.mapper.map(updatedCar, Car, ListCarDto);
   }
 }

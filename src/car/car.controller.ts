@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { CarService } from './car.service';
@@ -13,6 +14,7 @@ import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
 import { RolesEnum } from 'src/user/enums/RolesEnum';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
 import { ObjectId } from 'mongodb';
+import { UpdateCarDto } from './dtos/UpdateCarDto';
 
 @Controller('car')
 export class CarController {
@@ -42,5 +44,12 @@ export class CarController {
   async getById(@Param('id') id: string) {
     const objectId = new ObjectId(id);
     return this.carService.getById(objectId);
+  }
+
+  @Patch(':id')
+  @Roles(RolesEnum.ADMIN)
+  async patchCar(@Param('id') id: string, @Body() dto: UpdateCarDto) {
+    const objectId = new ObjectId(id);
+    return this.carService.patch(objectId, dto);
   }
 }
