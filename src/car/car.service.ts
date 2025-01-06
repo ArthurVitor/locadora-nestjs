@@ -12,11 +12,14 @@ import { CreateCarDto } from './dtos/CreateCarDto';
 import { ListCarDto } from './dtos/ListCarDto';
 import { ObjectId } from 'mongodb';
 import { UpdateCarDto } from './dtos/UpdateCarDto';
+import { Category } from 'src/category/entities/Category.entity';
 
 @Injectable()
 export class CarService {
   constructor(
     @InjectRepository(Car) private carRepository: MongoRepository<Car>,
+    @InjectRepository(Category)
+    private categoryRepository: MongoRepository<Category>,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -27,13 +30,21 @@ export class CarService {
   }
 
   async create(dto: CreateCarDto): Promise<Car> {
-    if (this.carRepository.findOneBy({ plate: dto.plate })) {
-      throw new ConflictException('Plate must be UNIQUE');
+    if (!(await this.categoryRepository.findOneBy({ name: dto.category }))) {
+      throw new NotFoundException('There is no category ' + dto.category);
     }
 
-    const entity = this.mapper.map(dto, CreateCarDto, Car);
+    try {
+      const entity = this.mapper.map(dto, CreateCarDto, Car);
 
-    return await this.carRepository.save(entity);
+      return await this.carRepository.save(entity);
+    } catch (error) {
+      if (error.code == 11000) {
+        throw new ConflictException('Plate must be unique');
+      }
+
+      throw error;
+    }
   }
 
   async delete(id: string) {

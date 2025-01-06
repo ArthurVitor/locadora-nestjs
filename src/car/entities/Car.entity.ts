@@ -2,7 +2,6 @@ import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 import { CarBrandsEnum } from '../enums/CarBrandEnum';
 import { CarOptionalsEnum } from '../enums/CarOptionalEnum';
-import { CarCategoryEnum } from '../enums/CarCategoryEnum';
 
 @Entity()
 export class Car {
@@ -32,5 +31,5 @@ export class Car {
 
   @Column()
   @AutoMap()
-  category: CarCategoryEnum;
+  category: string;
 }

@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { CarBrandsEnum } from '../enums/CarBrandEnum';
-import { CarCategoryEnum } from '../enums/CarCategoryEnum';
 import { CarOptionalsEnum } from '../enums/CarOptionalEnum';
 
 export class ListCarDto {
@@ -23,5 +22,5 @@ export class ListCarDto {
   optionals: CarOptionalsEnum[];
 
   @AutoMap()
-  category: CarCategoryEnum;
+  category: string;
 }

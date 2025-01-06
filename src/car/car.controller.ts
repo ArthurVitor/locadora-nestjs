@@ -27,7 +27,7 @@ export class CarController {
   }
 
   @Post()
-  @Roles(RolesEnum.ADMIN)
+  @Public()
   async create(@Body() dto: CreateCarDto) {
     return await this.carService.create(dto);
   }

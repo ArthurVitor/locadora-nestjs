@@ -3,7 +3,6 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { CreateCarDto } from '../dtos/CreateCarDto';
 import { Car } from '../entities/Car.entity';
 import { CarBrandsEnum } from '../enums/CarBrandEnum';
-import { CarCategoryEnum } from '../enums/CarCategoryEnum';
 import { CarOptionalsEnum } from '../enums/CarOptionalEnum';
 import { ListCarDto } from '../dtos/ListCarDto';
 
@@ -21,10 +20,6 @@ export class CarProfile extends AutomapperProfile {
         forMember(
           (dest) => dest.brand,
           mapFrom((source) => CarBrandsEnum[source.brand]),
-        ),
-        forMember(
-          (dest) => dest.category,
-          mapFrom((source) => CarCategoryEnum[source.category]),
         ),
         forMember(
           (dest) => dest.optionals,
