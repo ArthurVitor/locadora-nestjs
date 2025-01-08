@@ -32,4 +32,8 @@ export class Car {
   @Column()
   @AutoMap()
   category: string;
+
+  @Column()
+  @AutoMap()
+  isAvailable: boolean = true;
 }
