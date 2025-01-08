@@ -23,4 +23,7 @@ export class ListCarDto {
 
   @AutoMap()
   category: string;
+
+  @AutoMap()
+  isAvailable: boolean;
 }

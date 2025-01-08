@@ -23,10 +23,11 @@ export class CarService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async getAll(): Promise<ListCarDto[]> {
-    return this.carRepository
-      .find()
-      .then((cars) => this.mapper.mapArray(cars, Car, ListCarDto));
+  async getAll(isAvailable: boolean) {
+    const dtos = (await this.carRepository.find())
+      .filter((car) => car.isAvailable == isAvailable)
+      .map((car) => this.mapper.map(car, Car, ListCarDto));
+    return dtos;
   }
 
   async create(dto: CreateCarDto): Promise<Car> {

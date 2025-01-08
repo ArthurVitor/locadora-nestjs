@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dtos/CreateCarDto';
@@ -22,8 +23,8 @@ export class CarController {
 
   @Get()
   @Public()
-  async getAll() {
-    return await this.carService.getAll();
+  async getAll(@Query('isAvailable') isAvailable: boolean = true) {
+    return await this.carService.getAll(isAvailable);
   }
 
   @Post()
