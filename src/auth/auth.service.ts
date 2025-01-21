@@ -17,6 +17,7 @@ export class AuthService {
     if (!bcrypt.compare(data.password, user.password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    console.log(user);
 
     const payload = { sub: user.id, email: user.email, roles: user.roles };
 

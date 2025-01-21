@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
-import { RolesEnum } from 'src/user/enums/RolesEnum';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
 import { CreateCarDto } from './dtos/Car/CreateCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
@@ -31,7 +30,7 @@ export class CarController {
   ) {}
 
   @Get()
-  @Public()
+  @Roles('admin')
   async getAll(@Query('isAvailable') isAvailable: boolean = true) {
     return await this.carService.getAll(isAvailable);
   }
@@ -43,7 +42,7 @@ export class CarController {
   }
 
   @Delete(':id')
-  @Roles(RolesEnum.ADMIN)
+  @Roles('admin')
   @HttpCode(204)
   async delete(@Param('id') id: string) {
     this.carService.delete(id);
@@ -56,7 +55,7 @@ export class CarController {
   }
 
   @Patch(':id')
-  @Roles(RolesEnum.ADMIN)
+  @Roles('admin')
   async patchCar(@Param('id') id: number, @Body() dto: UpdateCarDto) {
     return this.carService.patch(id, dto);
   }

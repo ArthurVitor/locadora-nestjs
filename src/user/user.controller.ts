@@ -15,7 +15,7 @@ import { UpdateUserDto } from './dtos/User/UpdateUserDto';
 import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
-import { RolesEnum } from './enums/RolesEnum';
+
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -52,7 +52,7 @@ export class UserController {
 
   // ToDo: Only acessible by admin
   @Post(':id')
-  @Roles(RolesEnum.ADMIN)
+  @Roles('admin')
   async updateRole(@Param('id') id: number, @Body() role: UpdateUserRoleDto) {
     return this.userService.addRole(id, role);
   }

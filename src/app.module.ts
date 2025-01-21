@@ -15,7 +15,7 @@ import { CarModule } from './car/car.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.HOST || 'localhost',
-      port: parseInt(process.env.PORT) || 5432,
+      port: parseInt(process.env.DB_PORT) || 5432,
       username: process.env.ROOT_USERNAME || 'admin',
       password: process.env.ROOT_PASSWORD || 'root',
       database: process.env.DATABASE || 'locadora_db',

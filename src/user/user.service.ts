@@ -31,9 +31,15 @@ export class UserService {
     }
 
     user.password = await bcrypt.hash(user.password, 10);
-    const createdUser = await this.userRepository.save(
-      this.mapper.map(user, CreateUserDto, User),
-    );
+    const entity = this.mapper.map(user, CreateUserDto, User);
+
+    const userRole = await this.roleRepository.findOneBy({ name: 'user' });
+    console.log(userRole);
+
+    entity.roles = [];
+    entity.roles.push(userRole);
+
+    const createdUser = await this.userRepository.save(entity);
 
     return this.mapper.map(createdUser, User, ListUserDto);
   }
@@ -97,7 +103,10 @@ export class UserService {
   }
 
   async findOne(email: string): Promise<User> {
-    const user = await this.userRepository.findOneBy({ email: email });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['roles'],
+    });
 
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);
