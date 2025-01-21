@@ -8,20 +8,17 @@ import { classes } from '@automapper/classes';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CarModule } from './car/car.module';
-import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'mongodb',
-      host: process.env.MONGO_HOST || 'localhost',
-      port: parseInt(process.env.MONGO_PORT) || 27017,
-      username: process.env.MONGO_INITDB_ROOT_USERNAME || 'admin',
-      password: process.env.MONGO_INITDB_ROOT_PASSWORD || 'root',
-      database: process.env.MONGO_INITDB_DATABASE || 'locadora-db',
-      authSource: 'admin',
-      useUnifiedTopology: true,
+      type: 'postgres',
+      host: process.env.HOST || 'localhost',
+      port: parseInt(process.env.PORT) || 5432,
+      username: process.env.ROOT_USERNAME || 'admin',
+      password: process.env.ROOT_PASSWORD || 'root',
+      database: process.env.DATABASE || 'locadora_db',
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: true,
     }),
@@ -31,7 +28,6 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     AuthModule,
     CarModule,
-    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

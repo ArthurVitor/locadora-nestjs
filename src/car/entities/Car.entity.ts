@@ -1,21 +1,39 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
-import { CarBrandsEnum } from '../enums/CarBrandEnum';
-import { CarOptionalsEnum } from '../enums/CarOptionalEnum';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Optionals } from './Optionals.entity';
+import { Brand } from 'src/car/entities/Brand.entity';
+import { Category } from './Category.entity';
 
-@Entity()
+@Entity({ name: 'cars' })
 export class Car {
-  @ObjectIdColumn()
+  @PrimaryGeneratedColumn()
   @AutoMap()
-  id: ObjectId;
+  id: number;
 
   @Column({ unique: true })
   @AutoMap()
   plate: string;
 
-  @Column()
+  @ManyToOne(() => Brand, (brand) => brand.cars, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @AutoMap(() => Brand)
+  brand: Brand;
+
+  @ManyToOne(() => Category, (category) => category.cars, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @AutoMap()
-  brand: CarBrandsEnum;
+  category: Category;
 
   @Column()
   @AutoMap()
@@ -25,13 +43,10 @@ export class Car {
   @AutoMap()
   year: number;
 
-  @Column()
-  @AutoMap()
-  optionals: CarOptionalsEnum[];
-
-  @Column()
-  @AutoMap()
-  category: string;
+  @ManyToMany(() => Optionals)
+  @JoinTable({ name: 'car_optionals' })
+  @AutoMap(() => Optionals)
+  optionals: Optionals[];
 
   @Column()
   @AutoMap()

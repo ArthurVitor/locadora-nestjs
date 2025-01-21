@@ -1,13 +1,20 @@
-import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Address } from './Address.entity';
 import { AutoMap } from '@automapper/classes';
-import { RolesEnum } from '../enums/RolesEnum';
+import { Role } from './Role.entity';
 
 @Entity('users')
 export class User {
-  @ObjectIdColumn()
+  @PrimaryGeneratedColumn()
   @AutoMap()
-  id: ObjectId;
+  id: number;
 
   @Column()
   @AutoMap()
@@ -33,15 +40,19 @@ export class User {
   @AutoMap()
   cellPhone: string;
 
-  @Column({
-    type: 'array',
-    enum: RolesEnum,
-    default: [RolesEnum.USER],
-  })
-  @AutoMap()
-  role: RolesEnum[] = [RolesEnum.USER];
+  // @Column({
+  //   type: 'array',
+  //   enum: RolesEnum,
+  //   default: [RolesEnum.USER],
+  // })
+  // @AutoMap()
+  // role: RolesEnum[] = [RolesEnum.USER];
 
-  @Column()
+  @ManyToMany(() => Role, { cascade: true })
+  @JoinTable({ name: 'users_role' })
+  roles: Role[];
+
+  @OneToOne(() => Address, { cascade: true })
   @AutoMap(() => Address)
   address: Address;
 }

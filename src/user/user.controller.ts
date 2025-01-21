@@ -11,7 +11,6 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/User/CreateUserDto';
 import { ListUserDto } from './dtos/User/ListUserDto';
-import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from './dtos/User/UpdateUserDto';
 import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
@@ -39,25 +38,22 @@ export class UserController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<ListUserDto> {
-    const objectId = new ObjectId(id);
-    return await this.userService.getById(objectId);
+  async getById(@Param('id') id: number): Promise<ListUserDto> {
+    return await this.userService.getById(id);
   }
 
   @Patch(':id')
   async updateUser(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const objectId = new ObjectId(id);
-    return this.userService.update(objectId, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   // ToDo: Only acessible by admin
   @Post(':id')
   @Roles(RolesEnum.ADMIN)
-  async updateRole(@Param('id') id: string, @Body() role: UpdateUserRoleDto) {
-    const objectId = new ObjectId(id);
-    return this.userService.addRole(objectId, role);
+  async updateRole(@Param('id') id: number, @Body() role: UpdateUserRoleDto) {
+    return this.userService.addRole(id, role);
   }
 }

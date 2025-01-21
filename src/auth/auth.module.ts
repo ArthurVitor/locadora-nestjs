@@ -4,9 +4,6 @@ import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './infra/security/guard/auth.guard';
-import { RolesGuard } from './infra/security/guard/roles.guard';
 
 @Module({
   imports: [
@@ -25,14 +22,14 @@ import { RolesGuard } from './infra/security/guard/roles.guard';
   controllers: [AuthController],
   providers: [
     AuthService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
+    // {
+    // provide: APP_GUARD,
+    // useClass: AuthGuard,
+    // },
+    // {
+    // provide: APP_GUARD,
+    // useClass: RolesGuard,
+    // },
   ],
 })
 export class AuthModule {}

@@ -10,16 +10,25 @@ import {
   Query,
 } from '@nestjs/common';
 import { CarService } from './car.service';
-import { CreateCarDto } from './dtos/CreateCarDto';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
 import { RolesEnum } from 'src/user/enums/RolesEnum';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
-import { ObjectId } from 'mongodb';
-import { UpdateCarDto } from './dtos/UpdateCarDto';
+import { CreateCarDto } from './dtos/Car/CreateCarDto';
+import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
+import { CreateBrandDto } from './dtos/Brand/CreateBrandDto';
+import { BrandService } from './brand.service';
+import { CreateCategoryDto } from './dtos/Category/CreateCategoryDto';
+import { CategoryService } from './category.service';
+import { OptionalService } from './optional.service';
 
 @Controller('car')
 export class CarController {
-  constructor(private readonly carService: CarService) {}
+  constructor(
+    private readonly carService: CarService,
+    private readonly brandService: BrandService,
+    private readonly categoryService: CategoryService,
+    private readonly optionalService: OptionalService,
+  ) {}
 
   @Get()
   @Public()
@@ -42,15 +51,28 @@ export class CarController {
 
   @Get(':id')
   @Public()
-  async getById(@Param('id') id: string) {
-    const objectId = new ObjectId(id);
-    return this.carService.getById(objectId);
+  async getById(@Param('id') id: number) {
+    return this.carService.getById(id);
   }
 
   @Patch(':id')
   @Roles(RolesEnum.ADMIN)
-  async patchCar(@Param('id') id: string, @Body() dto: UpdateCarDto) {
-    const objectId = new ObjectId(id);
-    return this.carService.patch(objectId, dto);
+  async patchCar(@Param('id') id: number, @Body() dto: UpdateCarDto) {
+    return this.carService.patch(id, dto);
+  }
+
+  @Post('brand/create')
+  async createBrand(@Body() dto: CreateBrandDto) {
+    return await this.brandService.create(dto);
+  }
+
+  @Post('category/create')
+  async createCategory(@Body() dto: CreateCategoryDto) {
+    return await this.categoryService.create(dto);
+  }
+
+  @Post('optional/create')
+  async createOptional(@Body() dto: CreateCategoryDto) {
+    return await this.optionalService.create(dto);
   }
 }
