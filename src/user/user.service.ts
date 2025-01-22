@@ -34,7 +34,6 @@ export class UserService {
     const entity = this.mapper.map(user, CreateUserDto, User);
 
     const userRole = await this.roleRepository.findOneBy({ name: 'user' });
-    console.log(userRole);
 
     entity.roles = [];
     entity.roles.push(userRole);

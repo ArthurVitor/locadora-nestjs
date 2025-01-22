@@ -13,10 +13,12 @@ import { BrandProfile } from './profile/BrandProfile';
 import { Optionals } from './entities/Optionals.entity';
 import { OptionalProfile } from './profile/OptionalProfile';
 import { OptionalService } from './optional.service';
+import { BrandController } from './brand.controller';
+import { CategoryController } from './category.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car, Category, Brand, Optionals])],
-  controllers: [CarController],
+  controllers: [CarController, BrandController, CategoryController],
   providers: [
     CarService,
     CarProfile,

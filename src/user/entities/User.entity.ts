@@ -40,14 +40,6 @@ export class User {
   @AutoMap()
   cellPhone: string;
 
-  // @Column({
-  //   type: 'array',
-  //   enum: RolesEnum,
-  //   default: [RolesEnum.USER],
-  // })
-  // @AutoMap()
-  // role: RolesEnum[] = [RolesEnum.USER];
-
   @ManyToMany(() => Role, { cascade: true })
   @JoinTable({ name: 'users_role' })
   roles: Role[];

@@ -16,7 +16,6 @@ export class CategoryService {
   ) {}
 
   async create(dto: CreateCategoryDto) {
-    console.log(dto);
     try {
       const entity = this.mapper.map(dto, CreateCategoryDto, Category);
       console.log(entity);

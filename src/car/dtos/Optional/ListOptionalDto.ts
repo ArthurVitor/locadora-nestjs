@@ -1,12 +1,3 @@
-import { AutoMap } from '@automapper/classes';
-import { ApiProperty } from '@nestjs/swagger';
+import { BaseListDto } from '../BaseListDto';
 
-export class ListOptionalDto {
-  @AutoMap()
-  @ApiProperty()
-  id: number;
-
-  @AutoMap()
-  @ApiProperty()
-  name: string;
-}
+export class ListOptionalDto extends BaseListDto {}
