@@ -20,7 +20,7 @@ export class CategoryService {
       const entity = this.mapper.map(dto, CreateCategoryDto, Category);
       console.log(entity);
 
-      return await this.categoryRepository.save(entity);
+      return this.categoryRepository.save(entity);
     } catch (error) {
       if (error.code === 11000) {
         throw new ConflictException(

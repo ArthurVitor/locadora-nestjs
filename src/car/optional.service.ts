@@ -18,6 +18,6 @@ export class OptionalService {
   async create(dto: CreateOptionalDto) {
     const entity = this.mapper.map(dto, CreateOptionalDto, Optionals);
 
-    return await this.optionalRepository.save(entity);
+    return this.optionalRepository.save(entity);
   }
 }

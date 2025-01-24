@@ -35,8 +35,7 @@ export class UserService {
 
     const userRole = await this.roleRepository.findOneBy({ name: 'user' });
 
-    entity.roles = [];
-    entity.roles.push(userRole);
+    entity.roles = [userRole];
 
     const createdUser = await this.userRepository.save(entity);
 

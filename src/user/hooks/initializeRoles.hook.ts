@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from '../entities/Role.entity';
+import { RolesEnum } from '../enums/RolesEnum';
 
 @Injectable()
 export class InitializeRoles implements OnModuleInit {
@@ -14,13 +15,13 @@ export class InitializeRoles implements OnModuleInit {
 
     if (rolesIntialized.length === 0) {
       const admin = new Role();
-      admin.name = 'admin';
+      admin.name = RolesEnum.ADMIN;
 
       const employee = new Role();
-      employee.name = 'employee';
+      employee.name = RolesEnum.USER;
 
       const user = new Role();
-      user.name = 'user';
+      user.name = RolesEnum.USER;
 
       this.rolesRepository.insert([admin, employee, user]);
     }
