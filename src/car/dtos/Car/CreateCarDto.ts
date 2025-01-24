@@ -1,7 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { CarBrandsEnum } from '../enums/CarBrandEnum';
-import { CarOptionalsEnum } from '../enums/CarOptionalEnum';
-import { IsArray, IsIn, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCarDto {
@@ -11,7 +9,6 @@ export class CreateCarDto {
   plate: string;
 
   @AutoMap()
-  @IsIn(Object.keys(CarBrandsEnum))
   @ApiProperty()
   brand: string;
 
@@ -27,7 +24,6 @@ export class CreateCarDto {
 
   @AutoMap()
   @IsArray()
-  @IsIn(Object.keys(CarOptionalsEnum), { each: true })
   @ApiProperty()
   optionals: string[];
 

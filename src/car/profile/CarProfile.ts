@@ -1,10 +1,8 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { CreateCarDto } from '../dtos/CreateCarDto';
 import { Car } from '../entities/Car.entity';
-import { CarBrandsEnum } from '../enums/CarBrandEnum';
-import { CarOptionalsEnum } from '../enums/CarOptionalEnum';
-import { ListCarDto } from '../dtos/ListCarDto';
+import { CreateCarDto } from '../dtos/Car/CreateCarDto';
+import { ListCarDto } from '../dtos/Car/ListCarDto';
 
 export class CarProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
@@ -13,35 +11,8 @@ export class CarProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(
-        mapper,
-        CreateCarDto,
-        Car,
-        forMember(
-          (dest) => dest.brand,
-          mapFrom((source) => CarBrandsEnum[source.brand]),
-        ),
-        forMember(
-          (dest) => dest.optionals,
-          mapFrom((source) =>
-            source.optionals.map((optional) => CarOptionalsEnum[optional]),
-          ),
-        ),
-      );
-
-      createMap(
-        mapper,
-        Car,
-        ListCarDto,
-        forMember(
-          (dest) => dest.id,
-          mapFrom((source) => source.id.toString()),
-        ),
-        forMember(
-          (dest) => dest.optionals,
-          mapFrom((source) => source.optionals.map((optional) => optional)),
-        ),
-      );
+      createMap(mapper, CreateCarDto, Car);
+      createMap(mapper, Car, ListCarDto);
     };
   }
 }

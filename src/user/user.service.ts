@@ -5,21 +5,21 @@ import {
 } from '@nestjs/common';
 import { User } from './entities/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CreateUserDto } from './dtos/User/CreateUserDto';
 import { ListUserDto } from './dtos/User/ListUserDto';
 import * as bcrypt from 'bcrypt';
-import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from './dtos/User/UpdateUserDto';
 import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
-import { RolesEnum } from './enums/RolesEnum';
+import { Role } from './entities/Role.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: MongoRepository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Role) private roleRepository: Repository<Role>,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -31,9 +31,13 @@ export class UserService {
     }
 
     user.password = await bcrypt.hash(user.password, 10);
-    const createdUser = await this.userRepository.save(
-      this.mapper.map(user, CreateUserDto, User),
-    );
+    const entity = this.mapper.map(user, CreateUserDto, User);
+
+    const userRole = await this.roleRepository.findOneBy({ name: 'user' });
+
+    entity.roles = [userRole];
+
+    const createdUser = await this.userRepository.save(entity);
 
     return this.mapper.map(createdUser, User, ListUserDto);
   }
@@ -48,8 +52,8 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 
-  async getById(id: ObjectId): Promise<ListUserDto> {
-    const user = await this.userRepository.findOneBy(id);
+  async getById(id: number): Promise<ListUserDto> {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -58,8 +62,8 @@ export class UserService {
     return this.mapper.map(user, User, ListUserDto);
   }
 
-  async update(id: ObjectId, body: UpdateUserDto) {
-    const user = await this.userRepository.findOneBy(id);
+  async update(id: number, body: UpdateUserDto) {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -71,25 +75,36 @@ export class UserService {
     return this.mapper.map(user, User, ListUserDto);
   }
 
-  async addRole(id: ObjectId, role: UpdateUserRoleDto) {
-    const user = await this.userRepository.findOneBy(id);
+  async addRole(id: number, role: UpdateUserRoleDto) {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    if (user.role.includes(RolesEnum[role.name])) {
-      return this.mapper.map(user, User, ListUserDto);
+    const foundRole = await this.roleRepository.findOne({
+      where: {
+        name: role.name,
+      },
+    });
+
+    if (!foundRole) {
+      throw new NotFoundException(
+        'Could not find role with name: ' + role.name,
+      );
     }
 
-    user.role.push(RolesEnum[role.name]);
+    user.roles.push(foundRole);
     this.userRepository.save(user);
 
     return this.mapper.map(user, User, ListUserDto);
   }
 
   async findOne(email: string): Promise<User> {
-    const user = await this.userRepository.findOneBy({ email: email });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['roles'],
+    });
 
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);

@@ -7,9 +7,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './infra/security/guard/auth.guard';
 import { RolesGuard } from './infra/security/guard/roles.guard';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/User.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
