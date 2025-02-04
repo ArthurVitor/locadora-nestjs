@@ -18,7 +18,6 @@ export class CategoryService {
   async create(dto: CreateCategoryDto) {
     try {
       const entity = this.mapper.map(dto, CreateCategoryDto, Category);
-      console.log(entity);
 
       return this.categoryRepository.save(entity);
     } catch (error) {

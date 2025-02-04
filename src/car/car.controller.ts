@@ -35,7 +35,7 @@ export class CarController {
   @Delete(':id')
   @Roles(RolesEnum.ADMIN)
   @HttpCode(204)
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: number) {
     this.carService.delete(id);
   }
 

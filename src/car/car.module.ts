@@ -15,10 +15,17 @@ import { OptionalProfile } from './profile/OptionalProfile';
 import { OptionalService } from './optional.service';
 import { BrandController } from './brand.controller';
 import { CategoryController } from './category.controller';
+import { CarRepository } from './repositories/car.repository';
+import { OptionalController } from './optional.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car, Category, Brand, Optionals])],
-  controllers: [CarController, BrandController, CategoryController],
+  controllers: [
+    CarController,
+    BrandController,
+    CategoryController,
+    OptionalController,
+  ],
   providers: [
     CarService,
     CarProfile,
@@ -28,6 +35,7 @@ import { CategoryController } from './category.controller';
     BrandProfile,
     OptionalProfile,
     OptionalService,
+    CarRepository,
   ],
 })
 export class CarModule {}

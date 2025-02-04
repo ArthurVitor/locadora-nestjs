@@ -14,11 +14,12 @@ import { ListCarDto } from './dtos/Car/ListCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
 import { Brand } from 'src/car/entities/Brand.entity';
 import { Optionals } from './entities/Optionals.entity';
+import { CarRepository } from './repositories/car.repository';
 
 @Injectable()
 export class CarService {
   constructor(
-    @InjectRepository(Car) private carRepository: Repository<Car>,
+    private carRepository: CarRepository,
     @InjectRepository(Brand) private brandRepository: Repository<Brand>,
     @InjectRepository(Optionals)
     private optionalRepository: Repository<Optionals>,
@@ -28,9 +29,11 @@ export class CarService {
   ) {}
 
   async getAll(isAvailable: boolean) {
-    const entities = await this.carRepository.find({
-      relations: ['brand', 'category', 'optionals'],
-    });
+    const entities = await this.carRepository.findAll([
+      'brand',
+      'category',
+      'optionals',
+    ]);
 
     return this.mapper.mapArray(
       entities.filter((car) => car.isAvailable === isAvailable),
@@ -78,12 +81,12 @@ export class CarService {
     }
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     this.carRepository.delete(id);
   }
 
   async getById(id: number) {
-    const car = await this.carRepository.findOne({ where: { id } });
+    const car = await this.carRepository.findOneBy('id', id);
     if (!car) {
       throw new NotFoundException(
         'Could not find car with id: ' + id.toString(),
@@ -94,7 +97,7 @@ export class CarService {
   }
 
   async patch(id: number, dto: UpdateCarDto) {
-    const car = await this.carRepository.findOne({ where: { id } });
+    const car = await this.carRepository.findOneBy('id', id);
 
     if (!car) {
       throw new NotFoundException(
