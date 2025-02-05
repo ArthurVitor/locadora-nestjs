@@ -3,12 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/Car.entity';
-import { Repository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { Category } from 'src/car/entities/Category.entity';
 import { CreateCarDto } from './dtos/Car/CreateCarDto';
 import { ListCarDto } from './dtos/Car/ListCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
@@ -16,6 +13,7 @@ import { Optionals } from './entities/Optionals.entity';
 import { CarRepository } from './repositories/car.repository';
 import { BrandRepository } from './repositories/brand.repository';
 import { OptionalsRepository } from './repositories/optionals.repository';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Injectable()
 export class CarService {
@@ -23,8 +21,7 @@ export class CarService {
     private carRepository: CarRepository,
     private brandRepository: BrandRepository,
     private optionalRepository: OptionalsRepository,
-    @InjectRepository(Category)
-    private categoryRepository: Repository<Category>,
+    private categoryRepository: CategoryRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -43,9 +40,10 @@ export class CarService {
   }
 
   async create(dto: CreateCarDto): Promise<Car> {
-    const category = await this.categoryRepository.findOneBy({
-      name: dto.category,
-    });
+    const category = await this.categoryRepository.findOneBy(
+      'name',
+      dto.category,
+    );
     if (!category) {
       throw new NotFoundException('There is no category ' + dto.category);
     }

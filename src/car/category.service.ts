@@ -1,17 +1,14 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dtos/Category/CreateCategoryDto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/Category.entity';
-import { Repository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(Category)
-    private categoryRepository: Repository<Category>,
-
+    private categoryRepository: CategoryRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 

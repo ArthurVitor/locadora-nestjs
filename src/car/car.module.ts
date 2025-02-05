@@ -19,6 +19,7 @@ import { CarRepository } from './repositories/car.repository';
 import { OptionalController } from './optional.controller';
 import { BrandRepository } from './repositories/brand.repository';
 import { OptionalsRepository } from './repositories/optionals.repository';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car, Category, Brand, Optionals])],
@@ -40,6 +41,7 @@ import { OptionalsRepository } from './repositories/optionals.repository';
     CarRepository,
     BrandRepository,
     OptionalsRepository,
+    CategoryRepository,
   ],
 })
 export class CarModule {}
