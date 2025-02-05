@@ -12,15 +12,15 @@ import { Category } from 'src/car/entities/Category.entity';
 import { CreateCarDto } from './dtos/Car/CreateCarDto';
 import { ListCarDto } from './dtos/Car/ListCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
-import { Brand } from 'src/car/entities/Brand.entity';
 import { Optionals } from './entities/Optionals.entity';
 import { CarRepository } from './repositories/car.repository';
+import { BrandRepository } from './repositories/brand.repository';
 
 @Injectable()
 export class CarService {
   constructor(
     private carRepository: CarRepository,
-    @InjectRepository(Brand) private brandRepository: Repository<Brand>,
+    private brandRepository: BrandRepository,
     @InjectRepository(Optionals)
     private optionalRepository: Repository<Optionals>,
     @InjectRepository(Category)
@@ -50,7 +50,7 @@ export class CarService {
       throw new NotFoundException('There is no category ' + dto.category);
     }
 
-    const brand = await this.brandRepository.findOneBy({ name: dto.brand });
+    const brand = await this.brandRepository.findOneBy('name', dto.brand);
     if (!brand) {
       throw new NotFoundException('There is no brand ' + dto.brand);
     }
