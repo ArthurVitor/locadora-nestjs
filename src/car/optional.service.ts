@@ -1,17 +1,14 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { Optionals } from './entities/Optionals.entity';
 import { CreateOptionalDto } from './dtos/Optional/CreateOptionalDto';
 import { Injectable } from '@nestjs/common';
+import { OptionalsRepository } from './repositories/optionals.repository';
 
 @Injectable()
 export class OptionalService {
   constructor(
-    @InjectRepository(Optionals)
-    private optionalRepository: Repository<Optionals>,
-
+    private optionalRepository: OptionalsRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 

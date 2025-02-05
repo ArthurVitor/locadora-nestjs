@@ -15,14 +15,14 @@ import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
 import { Optionals } from './entities/Optionals.entity';
 import { CarRepository } from './repositories/car.repository';
 import { BrandRepository } from './repositories/brand.repository';
+import { OptionalsRepository } from './repositories/optionals.repository';
 
 @Injectable()
 export class CarService {
   constructor(
     private carRepository: CarRepository,
     private brandRepository: BrandRepository,
-    @InjectRepository(Optionals)
-    private optionalRepository: Repository<Optionals>,
+    private optionalRepository: OptionalsRepository,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
     @InjectMapper() private mapper: Mapper,
@@ -57,7 +57,7 @@ export class CarService {
 
     const optionals: Optionals[] = await Promise.all(
       dto.optionals.map(async (opt) => {
-        const optional = await this.optionalRepository.findOneBy({ name: opt });
+        const optional = await this.optionalRepository.findOneBy('name', opt);
         if (!optional) {
           throw new NotFoundException('There is no optional ' + opt);
         }
