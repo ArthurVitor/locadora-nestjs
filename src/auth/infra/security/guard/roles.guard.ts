@@ -3,13 +3,13 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorator/Roles.decorator';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/User.entity';
-import { Repository } from 'typeorm';
+import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: UserRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -27,10 +27,7 @@ export class RolesGuard implements CanActivate {
   }
 
   private async hasRole(userId: number, roles: string[]): Promise<boolean> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['roles'],
-    });
+    const user = await this.userRepository.findOneBy('id', userId, ['roles']);
 
     return user.roles.some((role) => roles.includes(role.name));
   }
