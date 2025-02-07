@@ -12,19 +12,19 @@ import { ListUserDto } from './dtos/User/ListUserDto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dtos/User/UpdateUserDto';
 import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
-import { Role } from './entities/Role.entity';
-import { Repository } from 'typeorm';
+import { RolesRepository } from './repositories/roles.repository';
+import { UserRepository } from './repositories/user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Role) private roleRepository: Repository<Role>,
+    @InjectRepository(User) private userRepository: UserRepository,
+    private roleRepository: RolesRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   async create(user: CreateUserDto): Promise<ListUserDto> {
-    if (await this.userRepository.findOneBy({ email: user.email })) {
+    if (await this.userRepository.findOneBy('email', user.email)) {
       throw new ConflictException(
         `User with email ${user.email} already exists`,
       );
@@ -33,7 +33,7 @@ export class UserService {
     user.password = await bcrypt.hash(user.password, 10);
     const entity = this.mapper.map(user, CreateUserDto, User);
 
-    const userRole = await this.roleRepository.findOneBy({ name: 'user' });
+    const userRole = await this.roleRepository.findOneBy('name', 'user');
 
     entity.roles = [userRole];
 
@@ -48,12 +48,12 @@ export class UserService {
     return this.mapper.mapArray(users, User, ListUserDto);
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
 
   async getById(id: number): Promise<ListUserDto> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOneBy('id', id);
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -63,7 +63,7 @@ export class UserService {
   }
 
   async update(id: number, body: UpdateUserDto) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOneBy('id', id);
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -76,18 +76,12 @@ export class UserService {
   }
 
   async addRole(id: number, role: UpdateUserRoleDto) {
-    const user = await this.userRepository.findOne({ where: { id } });
-
+    const user = await this.userRepository.findOneBy('id', id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    const foundRole = await this.roleRepository.findOne({
-      where: {
-        name: role.name,
-      },
-    });
-
+    const foundRole = await this.roleRepository.findOneBy('name', role.name);
     if (!foundRole) {
       throw new NotFoundException(
         'Could not find role with name: ' + role.name,
@@ -98,18 +92,5 @@ export class UserService {
     this.userRepository.save(user);
 
     return this.mapper.map(user, User, ListUserDto);
-  }
-
-  async findOne(email: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { email },
-      relations: ['roles'],
-    });
-
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
-    }
-
-    return user;
   }
 }

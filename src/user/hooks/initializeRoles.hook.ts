@@ -1,14 +1,11 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Role } from '../entities/Role.entity';
 import { RolesEnum } from '../enums/RolesEnum';
+import { RolesRepository } from '../repositories/roles.repository';
 
 @Injectable()
 export class InitializeRoles implements OnModuleInit {
-  constructor(
-    @InjectRepository(Role) private rolesRepository: Repository<Role>,
-  ) {}
+  constructor(private rolesRepository: RolesRepository) {}
 
   async onModuleInit() {
     const rolesIntialized = await this.rolesRepository.find();
