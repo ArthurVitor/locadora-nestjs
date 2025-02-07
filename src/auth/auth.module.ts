@@ -9,6 +9,7 @@ import { AuthGuard } from './infra/security/guard/auth.guard';
 import { RolesGuard } from './infra/security/guard/roles.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/User.entity';
+import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { User } from 'src/user/entities/User.entity';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    UserRepository,
   ],
 })
 export class AuthModule {}
