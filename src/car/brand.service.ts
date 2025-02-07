@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Brand } from './entities/Brand.entity';
-import { Repository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CreateBrandDto } from './dtos/Brand/CreateBrandDto';
+import { BrandRepository } from './repositories/brand.repository';
 
 @Injectable()
 export class BrandService {
   constructor(
-    @InjectRepository(Brand) private brandRepository: Repository<Brand>,
+    private brandRepository: BrandRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 

@@ -3,34 +3,34 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/Car.entity';
-import { Repository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { Category } from 'src/car/entities/Category.entity';
 import { CreateCarDto } from './dtos/Car/CreateCarDto';
 import { ListCarDto } from './dtos/Car/ListCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
-import { Brand } from 'src/car/entities/Brand.entity';
 import { Optionals } from './entities/Optionals.entity';
+import { CarRepository } from './repositories/car.repository';
+import { BrandRepository } from './repositories/brand.repository';
+import { OptionalsRepository } from './repositories/optionals.repository';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Injectable()
 export class CarService {
   constructor(
-    @InjectRepository(Car) private carRepository: Repository<Car>,
-    @InjectRepository(Brand) private brandRepository: Repository<Brand>,
-    @InjectRepository(Optionals)
-    private optionalRepository: Repository<Optionals>,
-    @InjectRepository(Category)
-    private categoryRepository: Repository<Category>,
+    private carRepository: CarRepository,
+    private brandRepository: BrandRepository,
+    private optionalRepository: OptionalsRepository,
+    private categoryRepository: CategoryRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getAll(isAvailable: boolean) {
-    const entities = await this.carRepository.find({
-      relations: ['brand', 'category', 'optionals'],
-    });
+    const entities = await this.carRepository.findAll([
+      'brand',
+      'category',
+      'optionals',
+    ]);
 
     return this.mapper.mapArray(
       entities.filter((car) => car.isAvailable === isAvailable),
@@ -40,21 +40,22 @@ export class CarService {
   }
 
   async create(dto: CreateCarDto): Promise<Car> {
-    const category = await this.categoryRepository.findOneBy({
-      name: dto.category,
-    });
+    const category = await this.categoryRepository.findOneBy(
+      'name',
+      dto.category,
+    );
     if (!category) {
       throw new NotFoundException('There is no category ' + dto.category);
     }
 
-    const brand = await this.brandRepository.findOneBy({ name: dto.brand });
+    const brand = await this.brandRepository.findOneBy('name', dto.brand);
     if (!brand) {
       throw new NotFoundException('There is no brand ' + dto.brand);
     }
 
     const optionals: Optionals[] = await Promise.all(
       dto.optionals.map(async (opt) => {
-        const optional = await this.optionalRepository.findOneBy({ name: opt });
+        const optional = await this.optionalRepository.findOneBy('name', opt);
         if (!optional) {
           throw new NotFoundException('There is no optional ' + opt);
         }
@@ -78,12 +79,12 @@ export class CarService {
     }
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     this.carRepository.delete(id);
   }
 
   async getById(id: number) {
-    const car = await this.carRepository.findOne({ where: { id } });
+    const car = await this.carRepository.findOneBy('id', id);
     if (!car) {
       throw new NotFoundException(
         'Could not find car with id: ' + id.toString(),
@@ -94,7 +95,7 @@ export class CarService {
   }
 
   async patch(id: number, dto: UpdateCarDto) {
-    const car = await this.carRepository.findOne({ where: { id } });
+    const car = await this.carRepository.findOneBy('id', id);
 
     if (!car) {
       throw new NotFoundException(
