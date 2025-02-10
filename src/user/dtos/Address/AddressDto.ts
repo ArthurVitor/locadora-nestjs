@@ -4,25 +4,28 @@ import { ApiProperty } from '@nestjs/swagger';
 export class AddressDto {
   @ApiProperty()
   @AutoMap()
-  street: string;
+  id: number;
 
-  @ApiProperty()
   @AutoMap()
-  number: number;
+  @ApiProperty()
+  street?: string;
 
-  @ApiProperty()
   @AutoMap()
-  complement: string;
+  @ApiProperty()
+  number?: string;
 
-  @ApiProperty()
   @AutoMap()
-  neighborhood: string;
+  complement?: string;
 
-  @ApiProperty()
   @AutoMap()
-  city: string;
+  @ApiProperty()
+  neighborhood?: string;
 
-  @ApiProperty()
   @AutoMap()
-  state: string;
+  @ApiProperty()
+  city?: string;
+
+  @AutoMap()
+  @ApiProperty()
+  state?: string;
 }
