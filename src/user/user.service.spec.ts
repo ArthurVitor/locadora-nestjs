@@ -11,7 +11,7 @@ import { User } from './entities/User.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/Role.entity';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('UserService', () => {
   let service: UserService;
@@ -34,6 +34,7 @@ describe('UserService', () => {
             findOneBy: jest.fn(),
             find: jest.fn(),
             delete: jest.fn(),
+            save: jest.fn(),
           },
         },
         {
@@ -42,7 +43,9 @@ describe('UserService', () => {
         },
         {
           provide: RolesRepository,
-          useValue: {},
+          useValue: {
+            findOneBy: jest.fn(),
+          },
         },
         {
           provide: getMapperToken(),
@@ -124,6 +127,39 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'delete').mockResolvedValue(undefined);
 
       await expect(service.delete(userId)).resolves.toBeUndefined();
+    });
+  });
+
+  describe('create', () => {
+    it('should create a valid user', async () => {
+      const createUserDto = UserStub.getValidCreateUserDto();
+      const user = UserStub.getValidUser();
+      const listUserDto = UserStub.getValidListUserDto();
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(null);
+
+      jest.spyOn(userRepository, 'save').mockResolvedValue(user);
+
+      jest
+        .spyOn(rolesRepository, 'findOneBy')
+        .mockResolvedValue({ id: 1, name: 'user' });
+
+      mapper.map = jest.fn().mockReturnValue(listUserDto);
+
+      const result = await service.create(createUserDto);
+
+      expect(result).toEqual(listUserDto);
+    });
+
+    it('should throw ConflictException if user already exists', async () => {
+      const createUserDto = UserStub.getValidCreateUserDto();
+      const existingUser = UserStub.getValidUser();
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(existingUser);
+
+      await expect(service.create(createUserDto)).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 });
