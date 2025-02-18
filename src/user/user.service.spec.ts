@@ -11,6 +11,7 @@ import { User } from './entities/User.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/Role.entity';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UserService', () => {
   let service: UserService;
@@ -79,6 +80,12 @@ describe('UserService', () => {
 
       const result = await service.getById(1);
       expect(result).toEqual(userDto);
+    });
+
+    it('should throw NotFoundException', async () => {
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(service.getById(192313)).rejects.toThrow(NotFoundException);
     });
   });
 });
