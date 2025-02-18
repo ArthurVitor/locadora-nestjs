@@ -162,4 +162,43 @@ describe('UserService', () => {
       );
     });
   });
+
+  describe('update', () => {
+    it('should update an existing user', async () => {
+      const userId = 1;
+      const updateUserDto = {
+        name: 'Arthur Updated',
+        email: 'arthur.updated@email.com',
+      };
+      const existingUser = UserStub.getValidUser();
+      const updatedUser = { ...existingUser, ...updateUserDto };
+      const updatedUserDto = UserStub.getValidListUserDto();
+      updatedUserDto.name = updateUserDto.name;
+      updatedUserDto.email = updateUserDto.email;
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(existingUser);
+
+      jest.spyOn(userRepository, 'save').mockResolvedValue(updatedUser);
+
+      mapper.map = jest.fn().mockReturnValue(updatedUserDto);
+
+      const result = await service.update(userId, updateUserDto);
+
+      expect(result).toEqual(updatedUserDto);
+    });
+
+    it('should throw NotFoundException if user does not exist', async () => {
+      const userId = 999;
+      const updateUserDto = {
+        name: 'Non-existent User',
+        email: 'nonexistent@email.com',
+      };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(service.update(userId, updateUserDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
 });
