@@ -32,6 +32,8 @@ describe('UserService', () => {
           provide: UserRepository,
           useValue: {
             findOneBy: jest.fn(),
+            find: jest.fn(),
+            delete: jest.fn(),
           },
         },
         {
@@ -86,6 +88,42 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(null);
 
       await expect(service.getById(192313)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return one user', async () => {
+      const users = [UserStub.getValidUser()];
+      const userDto = [UserStub.getValidListUserDto()];
+
+      jest.spyOn(userRepository, 'find').mockResolvedValue(users);
+
+      mapper.mapArray = jest.fn().mockReturnValue(userDto);
+
+      const result = await service.getAll();
+      expect(result).toEqual(userDto);
+    });
+
+    it('should return no user', async () => {
+      const users = [];
+      const userDto = [];
+
+      jest.spyOn(userRepository, 'find').mockResolvedValue(users);
+
+      mapper.mapArray = jest.fn().mockReturnValue(userDto);
+
+      const result = await service.getAll();
+      expect(result).toEqual(userDto);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete user', async () => {
+      const userId = 1;
+
+      jest.spyOn(userRepository, 'delete').mockResolvedValue(undefined);
+
+      await expect(service.delete(userId)).resolves.toBeUndefined();
     });
   });
 });
