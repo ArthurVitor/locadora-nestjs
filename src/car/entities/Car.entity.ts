@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Optionals } from './Optionals.entity';
-import { Brand } from 'src/car/entities/Brand.entity';
 import { Category } from './Category.entity';
+import { Brand } from './Brand.entity';
 
 @Entity({ name: 'cars' })
 export class Car {
