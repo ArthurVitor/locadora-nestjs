@@ -117,6 +117,7 @@ describe('UserService', () => {
 
       const result = await service.getAll();
       expect(result).toEqual(userDto);
+      expect(result).toHaveLength(0);
     });
   });
 
