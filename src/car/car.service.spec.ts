@@ -201,4 +201,27 @@ describe('CarService', () => {
       expect(result).toHaveLength(0);
     });
   });
+
+  describe('getById', () => {
+    it('should return a car', async () => {
+      const car = CarStub.getValidCar();
+      const carDto = CarStub.getValidCarDto();
+
+      jest.spyOn(carRepository, 'findOneBy').mockResolvedValue(car);
+
+      mapper.map = jest.fn().mockReturnValue(carDto);
+
+      const result = await service.getById(1);
+
+      expect(result).toEqual(carDto);
+    });
+
+    it('should throw NotFoundException', async () => {
+      const car = null;
+
+      jest.spyOn(carRepository, 'findOneBy').mockResolvedValue(car);
+
+      await expect(service.getById(1)).rejects.toThrow(NotFoundException);
+    });
+  });
 });
