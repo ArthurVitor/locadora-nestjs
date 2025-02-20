@@ -47,6 +47,7 @@ describe('CarService', () => {
             findOneBy: jest.fn(),
             save: jest.fn(),
             findAll: jest.fn(),
+            delete: jest.fn(),
           },
         },
         {
@@ -222,6 +223,16 @@ describe('CarService', () => {
       jest.spyOn(carRepository, 'findOneBy').mockResolvedValue(car);
 
       await expect(service.getById(1)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a car', async () => {
+      const carId = 1;
+
+      jest.spyOn(carRepository, 'delete').mockResolvedValue(undefined);
+
+      await expect(service.delete(carId)).resolves.toBeUndefined();
     });
   });
 });
