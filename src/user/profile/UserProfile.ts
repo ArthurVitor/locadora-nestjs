@@ -1,12 +1,12 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { AddressDto } from 'src/user/dtos/Address/AddressDto';
-import { CreateUserDto } from 'src/user/dtos/User/CreateUserDto';
-import { Address } from 'src/user/entities/Address.entity';
-import { User } from 'src/user/entities/User.entity';
+import { AddressDto } from '../dtos/Address/AddressDto';
+import { UpdateAddressDto } from '../dtos/Address/UpdateAddressDto';
+import { CreateUserDto } from '../dtos/User/CreateUserDto';
 import { ListUserDto } from '../dtos/User/ListUserDto';
 import { UpdateUserDto } from '../dtos/User/UpdateUserDto';
-import { UpdateAddressDto } from '../dtos/Address/UpdateAddressDto';
+import { Address } from '../entities/Address.entity';
+import { User } from '../entities/User.entity';
 
 export class UserProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
@@ -16,15 +16,7 @@ export class UserProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, CreateUserDto, User);
-      createMap(
-        mapper,
-        User,
-        ListUserDto,
-        forMember(
-          (dest) => dest.id,
-          mapFrom((src) => src.id.toString()),
-        ),
-      );
+      createMap(mapper, User, ListUserDto);
       createMap(mapper, UpdateUserDto, User);
       createMap(mapper, ListUserDto, User);
 

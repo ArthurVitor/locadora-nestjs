@@ -5,7 +5,7 @@ import { AddressDto } from '../Address/AddressDto';
 export class ListUserDto {
   @ApiProperty()
   @AutoMap()
-  id: string;
+  id: number;
 
   @ApiProperty()
   @AutoMap()
