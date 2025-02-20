@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from './entities/User.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CreateUserDto } from './dtos/User/CreateUserDto';
@@ -18,7 +17,7 @@ import { UserRepository } from './repositories/user.repository';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: UserRepository,
+    private userRepository: UserRepository,
     private roleRepository: RolesRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
