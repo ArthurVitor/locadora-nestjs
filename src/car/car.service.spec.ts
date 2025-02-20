@@ -20,6 +20,9 @@ import { CategoryStub } from './stub/CategoryStub';
 import { BrandStub } from './stub/BrandStub';
 import { OptionalsStub } from './stub/OptionalsStub';
 import { NotFoundException } from '@nestjs/common';
+import { BrandProfile } from './profile/BrandProfile';
+import { OptionalProfile } from './profile/OptionalProfile';
+import { CategoryProfile } from './profile/CategoryProfile';
 
 describe('CarService', () => {
   let service: CarService;
@@ -43,6 +46,7 @@ describe('CarService', () => {
           useValue: {
             findOneBy: jest.fn(),
             save: jest.fn(),
+            findAll: jest.fn(),
           },
         },
         {
@@ -82,6 +86,9 @@ describe('CarService', () => {
           }),
         },
         CarProfile,
+        BrandProfile,
+        OptionalProfile,
+        CategoryProfile,
       ],
     }).compile();
 
@@ -165,6 +172,33 @@ describe('CarService', () => {
       await expect(service.create(createCarDto)).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return all cars', async () => {
+      const cars = [CarStub.getValidCar()];
+      const carDto = [CarStub.getValidCarDto()];
+
+      jest.spyOn(carRepository, 'findAll').mockResolvedValue(cars);
+
+      mapper.mapArray = jest.fn().mockReturnValue(carDto);
+
+      const result = await service.getAll(true);
+
+      expect(result).toEqual(carDto);
+      expect(result).toHaveLength(1);
+    });
+
+    it('should return no cars', async () => {
+      const cars = [];
+
+      jest.spyOn(carRepository, 'findAll').mockResolvedValue(cars);
+
+      const result = await service.getAll(true);
+
+      expect(result).toEqual([]);
+      expect(result).toHaveLength(0);
     });
   });
 });
