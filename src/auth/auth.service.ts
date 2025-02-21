@@ -6,7 +6,7 @@ import {
 import { LoginDto } from './dtos/LoginDto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from 'src/user/repositories/user.repository';
+import { UserRepository } from '../user/repositories/user.repository';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    if (!bcrypt.compare(data.password, user.password)) {
+    if (!(await bcrypt.compare(data.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
