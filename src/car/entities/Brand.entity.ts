@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
-import { Car } from 'src/car/entities/Car.entity';
 import { PrimaryGeneratedColumn, Column, OneToMany, Entity } from 'typeorm';
+import { Car } from './Car.entity';
 
 @Entity({ name: 'brands' })
 export class Brand {

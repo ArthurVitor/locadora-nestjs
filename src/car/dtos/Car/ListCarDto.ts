@@ -5,7 +5,7 @@ import { ListBrandDto } from '../Brand/ListBrandDto';
 
 export class ListCarDto {
   @AutoMap()
-  id: string;
+  id: number;
 
   @AutoMap()
   plate: string;
