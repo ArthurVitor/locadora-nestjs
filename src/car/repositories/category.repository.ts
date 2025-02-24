@@ -17,4 +17,8 @@ export class CategoryRepository {
   findOneBy(key: keyof Category, value: any): Promise<Category> {
     return this.categoryRepository.findOneBy({ [key]: value });
   }
+
+  find(): Promise<Category[]> {
+    return this.categoryRepository.find();
+  }
 }

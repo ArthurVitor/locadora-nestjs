@@ -4,6 +4,7 @@ import { Category } from './entities/Category.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CategoryRepository } from './repositories/category.repository';
+import { ListCategoryDto } from './dtos/Category/ListOptionalDto';
 
 @Injectable()
 export class CategoryService {
@@ -24,5 +25,13 @@ export class CategoryService {
         );
       }
     }
+  }
+
+  async getAll() {
+    return this.mapper.mapArray(
+      await this.categoryRepository.find(),
+      Category,
+      ListCategoryDto,
+    );
   }
 }
