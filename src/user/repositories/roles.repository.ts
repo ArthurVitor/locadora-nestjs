@@ -17,7 +17,14 @@ export class RolesRepository {
     this.rolesRepository.insert(roles);
   }
 
-  findOneBy(key: keyof Role, value: any): Promise<Role> {
-    return this.rolesRepository.findOne({ [key]: value });
+  findOneBy(
+    key: keyof Role,
+    value: any,
+    relations: string[] = [],
+  ): Promise<Role | null> {
+    return this.rolesRepository.findOne({
+      where: { [key]: value },
+      relations: relations,
+    });
   }
 }
