@@ -25,18 +25,21 @@ export class CarService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async getAll(isAvailable: boolean) {
-    const entities = await this.carRepository.findAll([
-      'brand',
-      'category',
-      'optionals',
-    ]);
-
-    return this.mapper.mapArray(
-      entities.filter((car) => car.isAvailable === isAvailable),
-      Car,
-      ListCarDto,
+  async getAll(
+    category: string,
+    brand: string,
+    model: string,
+    optionals: string[],
+  ) {
+    const entities = await this.carRepository.findAll(
+      category,
+      brand,
+      model,
+      optionals,
+      ['brand', 'category', 'optionals'],
     );
+
+    return this.mapper.mapArray(entities, Car, ListCarDto);
   }
 
   async create(dto: CreateCarDto): Promise<Car> {

@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
@@ -15,15 +14,23 @@ import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
 import { CreateCarDto } from './dtos/Car/CreateCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
 import { RolesEnum } from 'src/user/enums/RolesEnum';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { GetCarsFilterDto } from './dtos/Car/GetCarsFilterDto';
 
+@ApiBearerAuth()
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @Get()
+  @Post('/get')
   @Roles(RolesEnum.ADMIN)
-  async getAll(@Query('isAvailable') isAvailable: boolean = true) {
-    return await this.carService.getAll(isAvailable);
+  async getAll(@Body() filter: GetCarsFilterDto) {
+    return await this.carService.getAll(
+      filter.brand,
+      filter.category,
+      filter.model,
+      filter.optionals,
+    );
   }
 
   @Post()
