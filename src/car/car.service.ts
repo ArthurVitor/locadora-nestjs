@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Car } from './entities/Car.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
@@ -26,10 +22,10 @@ export class CarService {
   ) {}
 
   async getAll(
-    category: string,
-    brand: string,
-    model: string,
-    optionals: string[],
+    category?: string,
+    brand?: string,
+    model?: string,
+    optionals: string[] = [],
   ) {
     const entities = await this.carRepository.findAll(
       category,
@@ -47,22 +43,12 @@ export class CarService {
       'name',
       dto.category,
     );
-    if (!category) {
-      throw new NotFoundException('There is no category ' + dto.category);
-    }
 
     const brand = await this.brandRepository.findOneBy('name', dto.brand);
-    if (!brand) {
-      throw new NotFoundException('There is no brand ' + dto.brand);
-    }
 
     const optionals: Optionals[] = await Promise.all(
       dto.optionals.map(async (opt) => {
-        const optional = await this.optionalRepository.findOneBy('name', opt);
-        if (!optional) {
-          throw new NotFoundException('There is no optional ' + opt);
-        }
-        return optional;
+        return await this.optionalRepository.findOneBy('name', opt);
       }),
     );
 
@@ -88,23 +74,12 @@ export class CarService {
 
   async getById(id: number) {
     const car = await this.carRepository.findOneBy('id', id);
-    if (!car) {
-      throw new NotFoundException(
-        'Could not find car with id: ' + id.toString(),
-      );
-    }
 
     return this.mapper.map(car, Car, ListCarDto);
   }
 
   async patch(id: number, dto: UpdateCarDto) {
     const car = await this.carRepository.findOneBy('id', id);
-
-    if (!car) {
-      throw new NotFoundException(
-        'Could not find car with id: ' + id.toString(),
-      );
-    }
 
     Object.assign(car, dto);
     const updatedCar = await this.carRepository.save(car);
