@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../entities/Category.entity';
 import { Repository } from 'typeorm';
@@ -15,6 +15,17 @@ export class CategoryRepository {
   }
 
   findOneBy(key: keyof Category, value: any): Promise<Category> {
-    return this.categoryRepository.findOneBy({ [key]: value });
+    const category = this.categoryRepository.findOne({ [key]: value });
+    if (!category) {
+      throw new NotFoundException(
+        'Could not find category with ' + key + ' ' + value,
+      );
+    }
+
+    return category;
+  }
+
+  find(): Promise<Category[]> {
+    return this.categoryRepository.find();
   }
 }

@@ -3,8 +3,10 @@ import { OptionalService } from './optional.service';
 import { CreateOptionalDto } from './dtos/Optional/CreateOptionalDto';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
 import { RolesEnum } from 'src/user/enums/RolesEnum';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('optionals')
+@ApiBearerAuth()
 export class OptionalController {
   constructor(private readonly optionalService: OptionalService) {}
 

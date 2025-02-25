@@ -13,8 +13,11 @@ export class UserRepository {
     key: keyof User,
     value: any,
     relations: string[] = [],
-  ): Promise<User> {
-    return this.userRepository.findOne({ [key]: value, relations: relations });
+  ): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { [key]: value },
+      relations: relations,
+    });
   }
 
   save(user: User): Promise<User> {

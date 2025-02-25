@@ -185,7 +185,7 @@ describe('CarService', () => {
 
       mapper.mapArray = jest.fn().mockReturnValue(carDto);
 
-      const result = await service.getAll(true);
+      const result = await service.getAll();
 
       expect(result).toEqual(carDto);
       expect(result).toHaveLength(1);
@@ -196,7 +196,7 @@ describe('CarService', () => {
 
       jest.spyOn(carRepository, 'findAll').mockResolvedValue(cars);
 
-      const result = await service.getAll(true);
+      const result = await service.getAll();
 
       expect(result).toEqual([]);
       expect(result).toHaveLength(0);

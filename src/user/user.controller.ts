@@ -16,8 +16,10 @@ import { UpdateUserRoleDto } from './dtos/User/UpdateUserRoleDto';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
 import { RolesEnum } from './enums/RolesEnum';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

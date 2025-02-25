@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brand } from '../entities/Brand.entity';
 import { Repository } from 'typeorm';
@@ -10,7 +10,14 @@ export class BrandRepository {
   ) {}
 
   findOneBy(key: keyof Brand, value: any): Promise<Brand> {
-    return this.brandRepository.findOneBy({ [key]: value });
+    const brand = this.brandRepository.findOneBy({ [key]: value });
+    if (!brand) {
+      throw new NotFoundException(
+        'Could not find brand with ' + key + ' ' + value,
+      );
+    }
+
+    return brand;
   }
 
   save(brand: Brand): Promise<Brand> {

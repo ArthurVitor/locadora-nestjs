@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from '../entities/Car.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class CarRepository {
@@ -11,12 +11,35 @@ export class CarRepository {
     return this.carRepository.save(car);
   }
 
-  async findAll(relations: string[] = []): Promise<Car[]> {
-    return this.carRepository.find({ relations });
+  async findAll(
+    category?: string,
+    brand?: string,
+    model?: string,
+    optionals: string[] = [],
+    relations: string[] = [],
+  ): Promise<Car[]> {
+    const where: any = {};
+
+    if (category) where.category = { name: category };
+    if (brand) where.brand = { name: brand };
+    if (model) where.model = model;
+    if (optionals.length) where.optionals = { name: In(optionals) };
+
+    return this.carRepository.find({
+      where,
+      relations,
+    });
   }
 
   async findOneBy(key: keyof Car, value: any): Promise<Car> {
-    return this.carRepository.findOneBy({ [key]: value });
+    const car = this.carRepository.findOne({ [key]: value });
+    if (!car) {
+      throw new NotFoundException(
+        'Could not find car with ' + key + ' ' + value,
+      );
+    }
+
+    return car;
   }
 
   async delete(id: number): Promise<void> {
