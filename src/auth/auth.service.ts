@@ -16,7 +16,9 @@ export class AuthService {
   ) {}
 
   async login(data: LoginDto): Promise<{ acess_token: string }> {
-    const user = await this.userRepository.findOneBy('email', data.email);
+    const user = await this.userRepository.findOneBy('email', data.email, [
+      'roles',
+    ]);
     if (!user) {
       throw new NotFoundException('User not found');
     }
