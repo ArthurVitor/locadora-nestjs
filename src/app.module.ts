@@ -8,6 +8,7 @@ import { classes } from '@automapper/classes';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CarModule } from './car/car.module';
+import { ReservaModule } from './reserva/reserva.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CarModule } from './car/car.module';
     UserModule,
     AuthModule,
     CarModule,
+    ReservaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

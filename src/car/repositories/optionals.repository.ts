@@ -10,8 +10,10 @@ export class OptionalsRepository {
     private optionalsRepository: Repository<Optionals>,
   ) {}
 
-  findOneBy(key: keyof Optionals, value: any): Promise<Optionals> {
-    const optional = this.optionalsRepository.findOneBy({ [key]: value });
+  async findOneBy(key: keyof Optionals, value: any): Promise<Optionals> {
+    const optional = await this.optionalsRepository.findOne({
+      where: { [key]: value },
+    });
     if (!optional) {
       throw new NotFoundException(
         'Could not find optional with ' + key + ' ' + value,

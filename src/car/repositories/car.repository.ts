@@ -32,7 +32,9 @@ export class CarRepository {
   }
 
   async findOneBy(key: keyof Car, value: any): Promise<Car> {
-    const car = this.carRepository.findOne({ [key]: value });
+    const car = await this.carRepository.findOne({
+      where: { [key]: value },
+    });
     if (!car) {
       throw new NotFoundException(
         'Could not find car with ' + key + ' ' + value,
