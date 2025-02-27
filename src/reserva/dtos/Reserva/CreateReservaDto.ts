@@ -3,20 +3,18 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReservaDto {
   @AutoMap()
-  @ApiProperty()
-  periodo_retirada: Date;
+  @ApiProperty({
+    type: String,
+    example: '2025-02-27',
+  })
+  periodo_retirada: string;
 
   @AutoMap()
-  @ApiProperty()
-  periodo_devolucao: Date;
-
-  @AutoMap()
-  @ApiProperty()
-  data_retirada: Date;
-
-  @AutoMap()
-  @ApiProperty()
-  data_devolucao: Date;
+  @ApiProperty({
+    type: String,
+    example: '2025-02-27',
+  })
+  periodo_devolucao: string;
 
   @ApiProperty()
   carro_id: number;
