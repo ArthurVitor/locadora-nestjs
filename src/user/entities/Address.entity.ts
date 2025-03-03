@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Address {
@@ -9,25 +8,26 @@ export class Address {
   id: number;
 
   @AutoMap()
-  @ApiProperty()
+  @Column()
   street?: string;
 
   @AutoMap()
-  @ApiProperty()
+  @Column()
   number?: string;
 
   @AutoMap()
+  @Column()
   complement?: string;
 
   @AutoMap()
-  @ApiProperty()
+  @Column()
   neighborhood?: string;
 
   @AutoMap()
-  @ApiProperty()
+  @Column()
   city?: string;
 
   @AutoMap()
-  @ApiProperty()
+  @Column()
   state?: string;
 }

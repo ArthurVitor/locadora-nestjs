@@ -16,9 +16,9 @@ export class Reserva {
 
   @Column({ type: 'date' })
   @AutoMap()
-  periodo_retirada: Date;
+  periodo_retirada: Date; // retirada_agendada
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date' }) // devolucao_agendada
   @AutoMap()
   periodo_devolucao: Date;
 

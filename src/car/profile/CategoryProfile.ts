@@ -2,7 +2,7 @@ import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { CreateCategoryDto } from '../dtos/Category/CreateCategoryDto';
 import { Category } from '../entities/Category.entity';
-import { ListCategoryDto } from '../dtos/Category/ListOptionalDto';
+import { ListCategoryDto } from '../dtos/Category/ListCategoryDto';
 
 export class CategoryProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {

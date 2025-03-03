@@ -20,22 +20,20 @@ export class ReservaService {
     entity.car = await this.carRepository.findOneBy('id', dto.carro_id);
     entity.data_retirada = new Date();
 
-    if (
-      !(await this.reservaRepository.isCarAvailable(
-        entity.car.id,
-        entity.periodo_retirada,
-        entity.periodo_devolucao,
-      ))
-    ) {
-      throw new BadRequestException(
-        'Car not available for the informed period',
-      );
-    }
+    await this.isCarAvailable(entity);
 
     return await this.mapper.map(
       await this.reservaRepository.save(entity),
       Reserva,
       ListReservaDto,
     );
+  }
+
+  private async isCarAvailable(entity: Reserva) {
+    if (!(await this.reservaRepository.isCarAvailable(entity))) {
+      throw new BadRequestException(
+        'Car not available for the informed period',
+      );
+    }
   }
 }
