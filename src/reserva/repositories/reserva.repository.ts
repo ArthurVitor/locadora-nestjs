@@ -20,8 +20,8 @@ export class ReservaRepository {
       .andWhere(
         '(reserva.periodo_retirada BETWEEN :inicio AND :fim OR reserva.periodo_devolucao BETWEEN :inicio AND :fim OR (:inicio BETWEEN reserva.periodo_retirada AND reserva.periodo_devolucao))',
         {
-          inicio: entity.periodo_retirada,
-          fim: entity.periodo_devolucao,
+          inicio: entity.retirada_agendada,
+          fim: entity.devolucao_agendada,
         },
       )
       .getOne();

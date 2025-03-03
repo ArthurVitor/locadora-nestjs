@@ -9,11 +9,11 @@ export class ListReservaDto {
 
   @AutoMap()
   @ApiProperty()
-  periodo_retirada: Date;
+  retirada_agendada: Date;
 
   @AutoMap()
   @ApiProperty()
-  periodo_devolucao: Date;
+  devolucao_agendada: Date;
 
   @AutoMap()
   @ApiProperty()

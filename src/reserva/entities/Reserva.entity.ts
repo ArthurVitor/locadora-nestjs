@@ -16,11 +16,11 @@ export class Reserva {
 
   @Column({ type: 'date' })
   @AutoMap()
-  periodo_retirada: Date; // retirada_agendada
+  retirada_agendada: Date; // retirada_agendada
 
   @Column({ type: 'date' }) // devolucao_agendada
   @AutoMap()
-  periodo_devolucao: Date;
+  devolucao_agendada: Date;
 
   @Column({ type: 'date', nullable: true })
   @AutoMap()

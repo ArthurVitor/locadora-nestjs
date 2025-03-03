@@ -7,14 +7,14 @@ export class CreateReservaDto {
     type: String,
     example: '2025-02-27',
   })
-  periodo_retirada: string;
+  retirada_agendada: string;
 
   @AutoMap()
   @ApiProperty({
     type: String,
     example: '2025-02-27',
   })
-  periodo_devolucao: string;
+  devolucao_agendada: string;
 
   @ApiProperty()
   carro_id: number;
