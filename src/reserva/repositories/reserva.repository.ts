@@ -18,7 +18,7 @@ export class ReservaRepository {
       .createQueryBuilder('reserva')
       .where('reserva.carro_id = :carroId', { carroId: entity.car.id })
       .andWhere(
-        '(reserva.periodo_retirada BETWEEN :inicio AND :fim OR reserva.periodo_devolucao BETWEEN :inicio AND :fim OR (:inicio BETWEEN reserva.periodo_retirada AND reserva.periodo_devolucao))',
+        '(reserva.retirada_agendada BETWEEN :inicio AND :fim OR reserva.devolucao_agendada BETWEEN :inicio AND :fim OR (:inicio BETWEEN reserva.retirada_agendada AND reserva.devolucao_agendada))',
         {
           inicio: entity.retirada_agendada,
           fim: entity.devolucao_agendada,

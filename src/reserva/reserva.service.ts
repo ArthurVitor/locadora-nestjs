@@ -6,27 +6,32 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { Reserva } from './entities/Reserva.entity';
 import { CarRepository } from 'src/car/repositories/car.repository';
+import { SeguroRepository } from './repositories/seguro.repository';
 
 @Injectable()
 export class ReservaService {
   constructor(
     private reservaRepository: ReservaRepository,
     private carRepository: CarRepository,
+    private seguroRepository: SeguroRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   async create(dto: CreateReservaDto): Promise<ListReservaDto> {
+    const [car, seguro] = await Promise.all([
+      this.carRepository.findOneBy('id', dto.carro_id),
+      this.seguroRepository.findOneBy('id', dto.seguro_id),
+    ]);
+
     const entity = this.mapper.map(dto, CreateReservaDto, Reserva);
-    entity.car = await this.carRepository.findOneBy('id', dto.carro_id);
+    entity.car = car;
+    entity.seguro = seguro;
     entity.data_retirada = new Date();
 
     await this.isCarAvailable(entity);
 
-    return await this.mapper.map(
-      await this.reservaRepository.save(entity),
-      Reserva,
-      ListReservaDto,
-    );
+    const savedEntity = await this.reservaRepository.save(entity);
+    return this.mapper.map(savedEntity, Reserva, ListReservaDto);
   }
 
   private async isCarAvailable(entity: Reserva) {
