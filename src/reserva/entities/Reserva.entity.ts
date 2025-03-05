@@ -7,6 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Seguro } from './Seguro.entity';
 
 @Entity()
 export class Reserva {
@@ -16,9 +17,9 @@ export class Reserva {
 
   @Column({ type: 'date' })
   @AutoMap()
-  retirada_agendada: Date; // retirada_agendada
+  retirada_agendada: Date;
 
-  @Column({ type: 'date' }) // devolucao_agendada
+  @Column({ type: 'date' })
   @AutoMap()
   devolucao_agendada: Date;
 
@@ -37,4 +38,9 @@ export class Reserva {
   @JoinColumn({ name: 'carro_id' })
   @AutoMap(() => Car)
   car: Car;
+
+  @ManyToOne(() => Seguro, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'seguro_id' })
+  @AutoMap(() => Seguro)
+  seguro: Seguro;
 }

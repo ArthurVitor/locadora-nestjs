@@ -18,4 +18,7 @@ export class CreateReservaDto {
 
   @ApiProperty()
   carro_id: number;
+
+  @ApiProperty()
+  seguro_id: number;
 }
