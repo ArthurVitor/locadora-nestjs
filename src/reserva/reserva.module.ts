@@ -11,10 +11,18 @@ import { SeguroService } from './seguro.service';
 import { SeguroRepository } from './repositories/seguro.repository';
 import { SeguroProfile } from './profile/SeguroProfile';
 import { SeguroController } from './seguro.controller';
+import { ItemReserva } from './entities/ItemReserva.entity';
+import { ItemReservaService } from './itemReserva.service';
+import { ItemReservaRepository } from './repositories/itemReserva.repository';
+import { ItemReservaProfile } from './profile/ItemReservaProfile';
+import { ItemReservaController } from './itemReserva.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reserva, Seguro]), CarModule],
-  controllers: [ReservaController, SeguroController],
+  imports: [
+    TypeOrmModule.forFeature([Reserva, Seguro, ItemReserva]),
+    CarModule,
+  ],
+  controllers: [ReservaController, SeguroController, ItemReservaController],
   providers: [
     ReservaService,
     ReservaRepository,
@@ -22,6 +30,9 @@ import { SeguroController } from './seguro.controller';
     SeguroService,
     SeguroRepository,
     SeguroProfile,
+    ItemReservaService,
+    ItemReservaRepository,
+    ItemReservaProfile,
   ],
 })
 export class ReservaModule {}

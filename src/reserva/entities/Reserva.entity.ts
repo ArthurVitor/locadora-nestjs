@@ -4,10 +4,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Seguro } from './Seguro.entity';
+import { ItemReserva } from './ItemReserva.entity';
 
 @Entity()
 export class Reserva {
@@ -43,4 +46,9 @@ export class Reserva {
   @JoinColumn({ name: 'seguro_id' })
   @AutoMap(() => Seguro)
   seguro: Seguro;
+
+  @ManyToMany(() => ItemReserva, { cascade: true })
+  @JoinTable({ name: 'reserva_items' })
+  @AutoMap(() => ItemReserva)
+  items: ItemReserva[];
 }
