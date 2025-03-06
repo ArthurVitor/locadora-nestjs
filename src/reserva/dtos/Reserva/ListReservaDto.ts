@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { ListCarDto } from '../../../car/dtos/Car/ListCarDto';
 import { ApiProperty } from '@nestjs/swagger';
 import { ListSeguroDto } from '../Seguro/ListSeguroDto';
+import { ListItemReservaDto } from '../ItemReserva/ListItemReservaDto';
 
 export class ListReservaDto {
   @AutoMap()
@@ -35,4 +36,8 @@ export class ListReservaDto {
   @AutoMap(() => ListSeguroDto)
   @ApiProperty()
   seguro: ListSeguroDto;
+
+  @AutoMap(() => ListItemReservaDto)
+  @ApiProperty()
+  items: ListItemReservaDto[];
 }

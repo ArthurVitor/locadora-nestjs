@@ -7,6 +7,7 @@ import { Mapper } from '@automapper/core';
 import { Reserva } from './entities/Reserva.entity';
 import { CarRepository } from 'src/car/repositories/car.repository';
 import { SeguroRepository } from './repositories/seguro.repository';
+import { ItemReservaRepository } from './repositories/itemReserva.repository';
 
 @Injectable()
 export class ReservaService {
@@ -14,19 +15,26 @@ export class ReservaService {
     private reservaRepository: ReservaRepository,
     private carRepository: CarRepository,
     private seguroRepository: SeguroRepository,
+    private itemReservaRepository: ItemReservaRepository,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   async create(dto: CreateReservaDto): Promise<ListReservaDto> {
-    const [car, seguro] = await Promise.all([
+    const [car, seguro, itens] = await Promise.all([
       this.carRepository.findOneBy('id', dto.carro_id),
       this.seguroRepository.findOneBy('id', dto.seguro_id),
+      Promise.all(
+        dto.itensReserva.map((item) =>
+          this.itemReservaRepository.findOneBy('name', item),
+        ),
+      ),
     ]);
 
     const entity = this.mapper.map(dto, CreateReservaDto, Reserva);
     entity.car = car;
     entity.seguro = seguro;
     entity.data_retirada = new Date();
+    entity.items = itens;
 
     await this.isCarAvailable(entity);
 

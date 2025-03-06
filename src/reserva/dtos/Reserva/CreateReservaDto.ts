@@ -21,4 +21,7 @@ export class CreateReservaDto {
 
   @ApiProperty()
   seguro_id: number;
+
+  @ApiProperty()
+  itensReserva: string[];
 }
