@@ -43,5 +43,6 @@ import { CategoryRepository } from './repositories/category.repository';
     OptionalsRepository,
     CategoryRepository,
   ],
+  exports: [CarRepository],
 })
 export class CarModule {}

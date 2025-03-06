@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { ListOptionalDto } from '../Optional/ListOptionalDto';
-import { ListCategoryDto } from '../Category/ListOptionalDto';
+import { ListCategoryDto } from '../Category/ListCategoryDto';
 import { ListBrandDto } from '../Brand/ListBrandDto';
 
 export class ListCarDto {

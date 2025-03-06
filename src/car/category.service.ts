@@ -4,7 +4,7 @@ import { Category } from './entities/Category.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CategoryRepository } from './repositories/category.repository';
-import { ListCategoryDto } from './dtos/Category/ListOptionalDto';
+import { ListCategoryDto } from './dtos/Category/ListCategoryDto';
 
 @Injectable()
 export class CategoryService {

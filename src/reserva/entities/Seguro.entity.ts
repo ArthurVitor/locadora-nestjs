@@ -2,32 +2,19 @@ import { AutoMap } from '@automapper/classes';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Address {
+export class Seguro {
   @PrimaryGeneratedColumn()
-  @AutoMap()
   id: number;
 
-  @AutoMap()
   @Column()
-  street?: string;
+  @AutoMap()
+  name: string;
 
-  @AutoMap()
   @Column()
-  number?: string;
+  @AutoMap()
+  description: string;
 
-  @AutoMap()
   @Column()
-  complement?: string;
-
   @AutoMap()
-  @Column()
-  neighborhood?: string;
-
-  @AutoMap()
-  @Column()
-  city?: string;
-
-  @AutoMap()
-  @Column()
-  state?: string;
+  dailyPrice: number;
 }
