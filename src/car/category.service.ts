@@ -27,7 +27,7 @@ export class CategoryService {
     }
   }
 
-  async getAll() {
+  async getAll(periodoRetirada: string, periodoDevolucao: string) {
     return this.mapper.mapArray(
       await this.categoryRepository.find(),
       Category,
