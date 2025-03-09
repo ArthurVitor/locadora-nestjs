@@ -28,10 +28,29 @@ export class CategoryService {
   }
 
   async getAll(periodoRetirada: string, periodoDevolucao: string) {
-    return this.mapper.mapArray(
-      await this.categoryRepository.find(),
-      Category,
-      ListCategoryDto,
-    );
+    const retirada = new Date(periodoRetirada);
+    const devolucao = new Date(periodoDevolucao);
+
+    const categories = await this.categoryRepository.find([
+      'cars',
+      'cars.reservas',
+    ]);
+
+    const availableCategories = categories.filter((category) => {
+      return category.cars.some((car) => {
+        return !car.reservas.some((reserva) => {
+          const reservaRetirada = new Date(reserva.retirada_agendada);
+          const reservaDevolucao = new Date(reserva.devolucao_agendada);
+
+          return (
+            (retirada >= reservaRetirada && retirada <= reservaDevolucao) ||
+            (devolucao >= reservaRetirada && devolucao <= reservaDevolucao) ||
+            (retirada <= reservaRetirada && devolucao >= reservaDevolucao)
+          );
+        });
+      });
+    });
+
+    return this.mapper.mapArray(availableCategories, Category, ListCategoryDto);
   }
 }

@@ -1,15 +1,17 @@
 import { AutoMap } from '@automapper/classes';
+import { Reserva } from '../../reserva/entities/Reserva.entity';
 import {
-  Column,
   Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
 } from 'typeorm';
-import { Optionals } from './Optionals.entity';
-import { Category } from './Category.entity';
 import { Brand } from './Brand.entity';
+import { Category } from './Category.entity';
+import { Optionals } from './Optionals.entity';
 
 @Entity({ name: 'cars' })
 export class Car {
@@ -48,7 +50,6 @@ export class Car {
   @AutoMap(() => Optionals)
   optionals: Optionals[];
 
-  @Column()
-  @AutoMap()
-  isAvailable: boolean = true;
+  @OneToMany(() => Reserva, (reserva) => reserva.car)
+  reservas: Reserva[];
 }

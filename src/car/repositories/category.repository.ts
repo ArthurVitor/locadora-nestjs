@@ -28,7 +28,9 @@ export class CategoryRepository {
     return category;
   }
 
-  find(): Promise<Category[]> {
-    return this.categoryRepository.find();
+  find(relations: string[] = []): Promise<Category[]> {
+    return this.categoryRepository.find({
+      relations: relations,
+    });
   }
 }
