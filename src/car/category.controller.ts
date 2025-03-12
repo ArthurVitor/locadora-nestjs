@@ -4,10 +4,8 @@ import { CreateCategoryDto } from './dtos/Category/CreateCategoryDto';
 import { Roles } from 'src/auth/infra/security/decorator/Roles.decorator';
 import { RolesEnum } from 'src/user/enums/RolesEnum';
 import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('category')
-@ApiBearerAuth()
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
