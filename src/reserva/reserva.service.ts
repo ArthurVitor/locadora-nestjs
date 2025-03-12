@@ -53,22 +53,23 @@ export class ReservaService {
     const reserva = await this.reservaRepository.findOneBy(
       'id',
       dto.reservaId,
-      ['items', 'car.category'],
+      ['items', 'car.category', 'user'],
     );
 
     if (reserva.inProgess) {
       throw new BadRequestException('Reserva already in progress');
     }
 
-    const user = await this.userRepository.findOneBy('id', dto.userId);
-    if (!user) {
-      throw new NotFoundException('Could not find user with id ' + dto.userId);
+    reserva.user ??= await this.userRepository.findOneBy('id', dto.userId);
+    if (!reserva.user) {
+      throw new NotFoundException(`User not found with id ${dto.userId}`);
     }
 
-    reserva.user = user;
-    reserva.valor_total = this.calculateTotal(reserva);
-    reserva.data_retirada = new Date();
-    reserva.inProgess = true;
+    Object.assign(reserva, {
+      valor_total: this.calculateTotal(reserva),
+      data_retirada: new Date(),
+      inProgess: true,
+    });
 
     const reservaDto = this.mapper.map(
       await this.reservaRepository.save(reserva),
@@ -78,7 +79,7 @@ export class ReservaService {
 
     return {
       reserva: reservaDto,
-      user: { id: user.id, name: user.name },
+      user: { id: reserva.user.id, name: reserva.user.name },
       total: reserva.valor_total,
     };
   }
