@@ -7,6 +7,7 @@ import { AddressStub } from './AddressStub';
 export class UserStub {
   static getValidUser(roles: Role[] = []): User {
     return {
+      reservas: [],
       id: 1,
       password: 'string',
       birthDate: new Date('2006-08-14'),

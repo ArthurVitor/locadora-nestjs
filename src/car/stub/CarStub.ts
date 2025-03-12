@@ -11,7 +11,7 @@ export class CarStub {
       id: 1,
       model: 'Corolla',
       year: 2021,
-      isAvailable: true,
+      reservas: [],
       plate: 'MENGAO123',
       brand: BrandStub.getValidBrand(),
       category: CategoryStub.getValidCategory(),

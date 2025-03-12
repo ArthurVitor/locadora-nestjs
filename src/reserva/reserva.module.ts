@@ -16,11 +16,13 @@ import { ItemReservaService } from './itemReserva.service';
 import { ItemReservaRepository } from './repositories/itemReserva.repository';
 import { ItemReservaProfile } from './profile/ItemReservaProfile';
 import { ItemReservaController } from './itemReserva.controller';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Reserva, Seguro, ItemReserva]),
     CarModule,
+    UserModule,
   ],
   controllers: [ReservaController, SeguroController, ItemReservaController],
   providers: [

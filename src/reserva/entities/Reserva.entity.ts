@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Seguro } from './Seguro.entity';
 import { ItemReserva } from './ItemReserva.entity';
+import { User } from '../../user/entities/User.entity';
 
 @Entity()
 export class Reserva {
@@ -35,7 +36,12 @@ export class Reserva {
   data_devolucao: Date;
 
   @AutoMap()
+  @Column({ nullable: true })
   valor_total: number;
+
+  @AutoMap()
+  @Column()
+  inProgess: boolean = false;
 
   @ManyToOne(() => Car, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'carro_id' })
@@ -51,4 +57,24 @@ export class Reserva {
   @JoinTable({ name: 'reserva_items' })
   @AutoMap(() => ItemReserva)
   items: ItemReserva[];
+
+  @ManyToOne(() => User, (user) => user.reservas, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'user_id' })
+  @AutoMap(() => User)
+  user: User;
+
+  getDiasDeAtraso(): number {
+    if (!this.data_devolucao) {
+      return 0;
+    }
+
+    const diffTime =
+      this.data_devolucao.getTime() - this.devolucao_agendada.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays > 0 ? diffDays : 0;
+  }
 }
