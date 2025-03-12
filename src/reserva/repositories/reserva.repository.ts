@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reserva } from '../entities/Reserva.entity';
 import { Repository } from 'typeorm';
@@ -27,5 +27,20 @@ export class ReservaRepository {
       .getOne();
 
     return !existingReserva;
+  }
+
+  async findOneBy(key: keyof Reserva, value: any, relations: string[] = []) {
+    const reserva = await this.repository.findOne({
+      where: { [key]: value },
+      relations: relations,
+    });
+
+    if (!reserva) {
+      throw new NotFoundException(
+        'Could not find reserva with key ' + key + 'and ' + value,
+      );
+    }
+
+    return reserva;
   }
 }

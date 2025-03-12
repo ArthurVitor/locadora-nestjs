@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Seguro } from './Seguro.entity';
 import { ItemReserva } from './ItemReserva.entity';
+import { User } from '../../user/entities/User.entity';
 
 @Entity()
 export class Reserva {
@@ -35,7 +36,12 @@ export class Reserva {
   data_devolucao: Date;
 
   @AutoMap()
+  @Column({ nullable: true })
   valor_total: number;
+
+  @AutoMap()
+  @Column()
+  inProgess: boolean = false;
 
   @ManyToOne(() => Car, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'carro_id' })
@@ -51,4 +57,12 @@ export class Reserva {
   @JoinTable({ name: 'reserva_items' })
   @AutoMap(() => ItemReserva)
   items: ItemReserva[];
+
+  @ManyToOne(() => User, (user) => user.reservas, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'user_id' })
+  @AutoMap(() => User)
+  user: User;
 }

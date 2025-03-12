@@ -16,7 +16,7 @@ export class Address {
   number?: string;
 
   @AutoMap()
-  @Column()
+  @Column({ nullable: true })
   complement?: string;
 
   @AutoMap()

@@ -37,6 +37,10 @@ export class ListReservaDto {
   @ApiProperty()
   seguro: ListSeguroDto;
 
+  @AutoMap()
+  @ApiProperty()
+  inProgess: boolean;
+
   @AutoMap(() => ListItemReservaDto)
   @ApiProperty()
   items: ListItemReservaDto[];
