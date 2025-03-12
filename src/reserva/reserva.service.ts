@@ -60,6 +60,10 @@ export class ReservaService {
       throw new BadRequestException('Reserva already in progress');
     }
 
+    if (reserva.data_devolucao) {
+      throw new BadRequestException('Reserva already finished');
+    }
+
     reserva.user ??= await this.userRepository.findOneBy('id', dto.userId);
     if (!reserva.user) {
       throw new NotFoundException(`User not found with id ${dto.userId}`);
@@ -82,6 +86,32 @@ export class ReservaService {
       user: { id: reserva.user.id, name: reserva.user.name },
       total: reserva.valor_total,
     };
+  }
+
+  async checkout(reservaId: number, userId: number) {
+    const reserva = await this.reservaRepository.findOneBy('id', reservaId, [
+      'user',
+      'car.category',
+      'items',
+    ]);
+
+    if (reserva.user.id !== userId) {
+      throw new BadRequestException('Only the owner can checkout');
+    }
+
+    const diasAtraso = reserva.getDiasDeAtraso();
+    if (!(diasAtraso > 0)) {
+      reserva.valor_total += reserva.car.category.dailyPrice * diasAtraso;
+    }
+
+    reserva.inProgess = false;
+    reserva.data_devolucao = new Date();
+
+    return this.mapper.map(
+      await this.reservaRepository.save(reserva),
+      Reserva,
+      ListReservaDto,
+    );
   }
 
   private calculateTotal(reserva: Reserva): number {

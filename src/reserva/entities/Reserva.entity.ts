@@ -65,4 +65,16 @@ export class Reserva {
   @JoinColumn({ name: 'user_id' })
   @AutoMap(() => User)
   user: User;
+
+  getDiasDeAtraso(): number {
+    if (!this.data_devolucao) {
+      return 0;
+    }
+
+    const diffTime =
+      this.data_devolucao.getTime() - this.devolucao_agendada.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays > 0 ? diffDays : 0;
+  }
 }
