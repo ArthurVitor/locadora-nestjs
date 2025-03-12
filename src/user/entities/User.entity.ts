@@ -3,12 +3,14 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Address } from './Address.entity';
 import { AutoMap } from '@automapper/classes';
 import { Role } from './Role.entity';
+import { Reserva } from '../../reserva/entities/Reserva.entity';
 
 @Entity('users')
 export class User {
@@ -47,4 +49,8 @@ export class User {
   @OneToOne(() => Address, { cascade: true })
   @AutoMap(() => Address)
   address: Address;
+
+  @OneToMany(() => Reserva, (reserva) => reserva.user, { cascade: true })
+  @AutoMap(() => Reserva)
+  reservas: Reserva[];
 }

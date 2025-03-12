@@ -14,10 +14,8 @@ import { Public } from 'src/auth/infra/security/decorator/isPublic.decorator';
 import { CreateCarDto } from './dtos/Car/CreateCarDto';
 import { UpdateCarDto } from './dtos/Car/UpdateCarDto';
 import { RolesEnum } from 'src/user/enums/RolesEnum';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { GetCarsFilterDto } from './dtos/Car/GetCarsFilterDto';
 
-@ApiBearerAuth()
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}

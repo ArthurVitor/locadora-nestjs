@@ -1,4 +1,4 @@
-import { ListCategoryDto } from '../dtos/Category/ListOptionalDto';
+import { ListCategoryDto } from '../dtos/Category/ListCategoryDto';
 import { Category } from '../entities/Category.entity';
 
 export class CategoryStub {

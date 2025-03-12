@@ -9,8 +9,10 @@ export class BrandRepository {
     @InjectRepository(Brand) private brandRepository: Repository<Brand>,
   ) {}
 
-  findOneBy(key: keyof Brand, value: any): Promise<Brand> {
-    const brand = this.brandRepository.findOneBy({ [key]: value });
+  async findOneBy(key: keyof Brand, value: any): Promise<Brand> {
+    const brand = await this.brandRepository.findOne({
+      where: { [key]: value },
+    });
     if (!brand) {
       throw new NotFoundException(
         'Could not find brand with ' + key + ' ' + value,

@@ -14,18 +14,23 @@ export class CategoryRepository {
     return this.categoryRepository.save(category);
   }
 
-  findOneBy(key: keyof Category, value: any): Promise<Category> {
-    const category = this.categoryRepository.findOne({ [key]: value });
+  async findOneBy(key: keyof Category, value: any): Promise<Category> {
+    const category = await this.categoryRepository.findOne({
+      where: { [key]: value },
+    });
+
     if (!category) {
       throw new NotFoundException(
-        'Could not find category with ' + key + ' ' + value,
+        `Could not find category with ${key}: ${value}`,
       );
     }
 
     return category;
   }
 
-  find(): Promise<Category[]> {
-    return this.categoryRepository.find();
+  find(relations: string[] = []): Promise<Category[]> {
+    return this.categoryRepository.find({
+      relations: relations,
+    });
   }
 }
